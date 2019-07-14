@@ -65,11 +65,11 @@ $("#train-name-input").val("");
 $("#destination-input").val("");
 $("#train-time-input").val("");
 $("#frequency-input").val("");
-
+});
 // Create firebase event listener to add trains to database and a row in the html when the user adds an entry - stores data inside the variable of childSnapshot
 database.ref().on("child_added", function(childSnapshot) {
     console.log(childSnapshot.val());
-})
+
 
     // Store childSnapshot values into variables
     var trainName = childSnapshot.val().name;
@@ -105,6 +105,9 @@ database.ref().on("child_added", function(childSnapshot) {
         $("<td>").text(frequency),
         $("<td>").text(firstTrain),
         $("<td>").text(minToTrain)
-    )
+    );
+
+    // Append new row to the table
+    $("#train-table > tbody").append(newRow);
 
 });
