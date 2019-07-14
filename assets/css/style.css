@@ -1,4 +1,14 @@
+body {
+    background-color: rgb(235, 222, 201);
+}
+
+.jumbotron {
+    background-image: url("../images/bw-train.jpeg");
+    background-position: bottom;
+}
+
 .card-header {
-    background-color: #38ADB7;
+    /* background-color: #38ADB7; */
+    background-image: url("../images/blue-pexels.jpeg");
     color: #fff;
 }

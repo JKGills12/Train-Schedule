@@ -16,18 +16,15 @@ var config = {
     appId: "1:247418734176:web:ce03218b176667e1"
 };
 
+// Intialize App
 firebase.initializeApp(config);
 
+// Get a reference to the database service
 var database = firebase.database();
 
 // Button for adding train
 $("#add-train-btn").on("click", function (event) {
     event.preventDefault();
-
-// Time is 2:30 AM
-var firstTime = "2:30";
-
-
 
 // Takes user input
 
@@ -37,27 +34,77 @@ var firstTime = "2:30";
     // Logs train destination
     var trainDestination = $("#destination-input").val().trim();
 
-    // Train arrives every 5 minutes
-    var trainFrequency = 5; 
+    // First train time
+    var firstTrain = moment($("#train-time-input").val().trim(), "HH:mm").format("HH:mm");
 
-    // Logs train arrival time in military time
-    var militaryTime = moment(firstTime, "HH:mm");
-    console.log(militaryTime);
+    // Frequency of train
+    var frequency = $("#frequency-input").val().trim();
 
 
-    // console.log("Hello");
+// create local temporary obj to hold the train data
+var newTrain = {
+    name: trainName,
+    destination: trainDestination,
+    ftrain: firstTrain,
+    freq: frequency
+};
 
-    // Uploads new train data to the database
-    var newTrain = {
-        name: trainName,
-        destination: trainDestination,
-        frequency: trainFrequency,
-        arrival: trainArrival,
-        distance: distAway
-    };
+// Upload new train data to database
+database.ref().push(newTrain);
 
-    // Upload new train data to database
-    database.ref().push(newTrain);
-   
+// Logs to console for testing
+console.log(newTrain.name);
+console.log(newTrain.destination);
+console.log(newTrain.ftrain);
+console.log(newTrain.freq);
 
+alert("Train successfully added");
+
+// Clear text boxes
+$("#train-name-input").val("");
+$("#destination-input").val("");
+$("#train-time-input").val("");
+$("#frequency-input").val("");
+
+// Create firebase event listener to add trains to database and a row in the html when the user adds an entry - stores data inside the variable of childSnapshot
+database.ref().on("child_added", function(childSnapshot) {
+    console.log(childSnapshot.val());
 })
+
+    // Store childSnapshot values into variables
+    var trainName = childSnapshot.val().name;
+    var trainDestination = childSnapshot.val().destination;
+    var firstTrain = childSnapshot.val().ftrain;
+    var frequency = childSnapshot.val().freq;
+
+
+    // First time (pushed back 1 year to make sure it comes before the current time)
+    var firstTimeConverted = moment(firstTrain, "HH:mm").subtract(1, "years");
+    console.log(firstTimeConverted);
+
+    // Current time
+    var currentTime = moment().diff(moment(firstTimeConverted), "minutes");
+    console.log("CURRENT TIME: " + currentTime);
+
+    // Store difference in in time between currentTime and first train converted in a variable
+    var timeDiff = moment().diff(moment(firstTimeConverted), "minutes");
+    console.log(firstTrain);
+    console.log("Diffrence in Time: " + timeDiff);
+
+    // Find the remainder of the time left and store in a variable
+    var timeRemainder = timeDiff % frequency;
+    console.log(timeRemainder);
+
+    // Calculate minutes till train and store in variable
+    var minToTrain = frequency - timeRemainder;
+
+    // next train
+    var newRow = $("<tr>").append(
+        $("<td>").text(trainName),
+        $("<td>").text(trainDestination),
+        $("<td>").text(frequency),
+        $("<td>").text(firstTrain),
+        $("<td>").text(minToTrain)
+    )
+
+});
