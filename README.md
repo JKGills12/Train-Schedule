@@ -5,6 +5,6 @@ This goal of this asssignment was to use Firebase to store user input data and t
 ## Instructions
 The user will input a name of a train, the destination, train time, and the frequency in the 'Add Train' table. Once submitted moment.js will be launched to convert the time of the next arrival and how many minutes away it is. Firebase will then store the data in its database.
 
-[Train Schedule] https://github.com/JKGills12/Train-Schedule.git
+[GitHub] https://github.com/JKGills12/Train-Schedule.git
 
-[GitHub] https://jkgills12.github.io/Train-Schedule/
+[Train Schedule] https://jkgills12.github.io/Train-Schedule/
